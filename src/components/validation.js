@@ -1,10 +1,7 @@
 export const validationRules = {
   email: [
     (v) =>
-      !v ||
-      // eslint-disable-next-line
-      /^[a-zA-Z0-9_.+&\\-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(v) ||
-      'Email must be valid',
+      !v || /^[a-zA-Z0-9_.+&\\-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(v) || 'Email must be valid',
   ],
   ssn: [
     (v) =>
@@ -24,18 +21,22 @@ export const validationRules = {
       `Enter a ten-digit number with country code - +1 xxx-xxx-xxxx`,
 
     // Ten digits plus characters inserted by the mask
-    (v) =>
-      !v ||
-      v.length === 15 ||
-      `Enter a ten-digit number with country code - +1 xxx-xxx-xxxx`,
+    (v) => !v || v.length === 15 || `Enter a ten-digit number with country code - +1 xxx-xxx-xxxx`,
   ],
-  datefield: [
-        // xx-xx-xxxx checks for days in month, allows 29 days for any February
-        (v) =>
-          /^(?:(?:0[13578]|1[02])-(?:0[1-9]|[12][0-9]|3[01])|(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9]))-\d{4}$/.test(v) ||
-          'Please enter a valid date.',
-        (v) => (v && v.length === 10) || 'Please enter a valid date.',
+  dateRule: [
+    // xx-xx-xxxx checks for days in month, allows 29 days for any February
+    (v) => {
+      if (!v) return true // allow blank if not required
+      const isValid =
+        /^(?:(?:0[13578]|1[02])-(?:0[1-9]|[12][0-9]|3[01])|(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9]))-\d{4}$/.test.test(
+          v,
+        )
+      return isValid || 'Please enter a valid date.'
+    },
+    (v) => {
+      if (!v) return true // allow blank if not required
+      return v.length === 10 || 'Please enter a valid date.'
+    },
   ],
   requiredRule: [(v) => !!v || 'This field is required.'],
-};
-
+}

@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue'
+import { validationRules } from '../validation'
 
 defineOptions({
   inheritAttrs: false,
@@ -15,19 +16,7 @@ const props = defineProps({
   modelValue: String,
 })
 
-const validationRules = {
-  dateRule: [
-    // MM-DD-YYYY - checks for days in month, allows 29 days for any February
-    (v) =>
-      /^(?:(?:0[13578]|1[02])-(?:0[1-9]|[12][0-9]|3[01])|(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9]))-\d{4}$/.test(
-        v,
-      ) || 'Please enter a valid date.',
-    (v) => (v && v.length === 10) || 'Please enter a valid date.',
-  ],
-  requiredRule: [(v) => !!v || 'This field is required.'],
-}
-
-const dateRule = ref(validationRules.dateRule)
+const dateRule = ref(validationRules.dateule)
 const dateInput = ref('')
 const localValue = ref(props.modelValue)
 const input = ref()

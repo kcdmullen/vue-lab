@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const dateInput = ref()
 const lastItem = ref()
@@ -186,7 +186,7 @@ onMounted(() => {
       <BaseSelect label="Choose" :items="['Red', 'Blue', 'Green']" />
     </div>
     <div class="row">
-      <BaseInput type="ssn" label="SSN" />
+      <BaseInput type="ssn" label="SSN" :required="false" />
     </div>
     <div class="row">
       <BaseInput type="tel" label="Phone" />
