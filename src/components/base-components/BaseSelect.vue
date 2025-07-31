@@ -1,5 +1,5 @@
 <script setup>
-import { validationRules } from './validation'
+import { validationRules } from '../validation'
 import { ref } from 'vue'
 
 defineOptions({
@@ -12,23 +12,6 @@ const props = defineProps({
   items: Array,
 })
 const showOptions = ref(false)
-const tempLocalValue = ref(null)
-
-function set(bool) {
-  showOptions.value = false
-  if (!tempLocalValue.value) {
-    setTimeout(() => {
-      showOptions.value = bool
-    }, 25)
-  }
-}
-function doSelect(e) {
-  console.log('made it', e)
-  tempLocalValue.value = e
-  setTimeout(() => {
-    tempLocalValue.value = null
-  }, 500)
-}
 </script>
 
 <template>
@@ -43,10 +26,10 @@ function doSelect(e) {
       :required="props.required"
       :menu="showOptions"
       :rules="props.required ? validationRules.requiredRule : []"
-      @focus="set(tempLocalValue ? false : true)"
-      @update:model-value="doSelect"
+      @focus="showOptions = true"
       ref="meselect"
       :clearable="true"
+      open-on-clear
     ></v-select>
   </div>
 </template>
