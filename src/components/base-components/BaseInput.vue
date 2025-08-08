@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { validationRules } from '../validation'
 import { vMaska } from 'maska/vue'
 
@@ -23,14 +23,15 @@ const typeRule = ref([])
 
 const hint = ref()
 const mask = ref()
-const localError = ref('')
+const input = ref()
 
-watch(
-  () => props.serverError,
-  (newVal) => {
-    localError.value = newVal
-  },
-)
+async function validate() {
+  const v = await input.value.validate?.()
+  const isValid = v.length === 0;
+  if (!isValid) {
+    input.value.focus()
+  }
+}
 
 onMounted(() => {
   if (validationRules[props.type]) {
@@ -59,7 +60,7 @@ onMounted(() => {
 <template>
   <BaseFormWrapper v-bind="props" :rules="typeRule">
     <template #default="slotProps">
-      <v-text-field v-maska="mask" v-bind="$attrs" v-bind:="slotProps"></v-text-field>
+      <v-text-field v-maska="mask" v-bind="$attrs" v-bind:="slotProps" @blur="validate" ref="input"></v-text-field>
     </template>
   </BaseFormWrapper>
 </template>

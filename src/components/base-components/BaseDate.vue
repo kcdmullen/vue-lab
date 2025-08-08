@@ -34,13 +34,16 @@ function onDateInput(event) {
     return
   }
 
+  if (match[1]?.length === 1) {
+    match[1] = '0' + match[1]
+  }
+
+  if (match[2]?.length === 1) {
+    match[2] = '0' + match[2]
+  }
   let [raw, mm, dd, yyyy] = match
-  if (raw.length === 2 && raw.includes('/')) {
-    mm = '0' + mm
-  }
-  if (raw.length === 5 && raw.charAt(raw.length - 1) === '/') {
-    dd = '0' + dd
-  }
+  if (raw && mm?.length === 1) mm = '0' + mm;
+  if (dd?.length === 1) dd = '0' + dd;
 
   const allComplete = mm && dd && yyyy?.length === 4
   if (allComplete) {
@@ -49,7 +52,9 @@ function onDateInput(event) {
     // Show partial input as-is, using original values (no padding)
     dateInput.value = [mm, dd, yyyy].filter(Boolean).join('-')
   }
-  emit('update:modelValue', dateInput.value)
+  setTimeout(() => {
+    emit('update:modelValue', `${dateInput.value}`)
+  }, 0);
 }
 
 const emit = defineEmits(['update:modelValue', 'hitEnter'])
@@ -57,16 +62,21 @@ const emit = defineEmits(['update:modelValue', 'hitEnter'])
 watch(
   () => props.modelValue,
   (newVal) => {
+    if (newVal === localValue.value) return
     localValue.value = newVal
   },
 )
 
 function preventSubmit(e) {
+  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab']
+  if (allowedKeys.includes(e.key)) return
   if (e.key === 'Enter') {
     // Keep from submitting the form, and instead emit an event to possibly
     // be used to do a search
     e.preventDefault()
     emit('hitEnter')
+  } else if (!/^[\d-/]+/.test(e.key)) {
+     e.preventDefault()
   }
 }
 
@@ -94,7 +104,7 @@ onMounted(() => {
       :error="props.error"
       :maxLength="10"
       density="compact"
-      @input="onDateInput"
+      @blur="onDateInput"
       v-model="localValue"
       @keydown="preventSubmit"
       :tabindex="1"

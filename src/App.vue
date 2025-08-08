@@ -1,10 +1,14 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 const dateInput = ref()
 const lastItem = ref()
 const firstItem = ref()
 const streetType = ref()
+
+watch(dateInput, (newVal, oldVal) => {
+  console.log('PARENT dateInput changed from', oldVal, 'to', newVal)
+})
 
 function findNext(e, source) {
   if (e.shiftKey && source === 'firstItem') {
@@ -164,11 +168,12 @@ onMounted(() => {
   <v-container id="container">
     <div class="row">
       <BaseDate
+        id="dob"
         label="DOB"
         v-model="dateInput"
-        @keydown="findNext($event, 'firstItem')"
         ref="firstItem"
         :required="false"
+        :disabled="false"
       />
     </div>
     <div class="row">
@@ -180,22 +185,24 @@ onMounted(() => {
         :items="streetTypes"
         item-title="name"
         item-value="name"
+        class="form-element"
       />
     </div>
     <div class="row">
-      <BaseSelect label="Choose" :items="['Red', 'Blue', 'Green']" />
+      <BaseSelect id="color" class="form-element" label="Choose" :items="['Red', 'Blue', 'Green']" />
     </div>
     <div class="row">
-      <BaseInput type="ssn" label="SSN" :required="false" />
+      <BaseInput id="ssn" class="form-element" type="ssn" label="SSN" :required="false" @focus="showMe" />
     </div>
     <div class="row">
-      <BaseInput type="tel" label="Phone" />
+      <BaseInput id="phone" class="form-element" type="tel" label="Phone" />
     </div>
     <div class="row">
-      <BaseInput type="zip" label="Zip" />
+      <BaseInput id="zip" class="form-element" type="zip" label="Zip" />
     </div>
     <div class="row">
       <v-btn
+        id="submit"
         color="primary"
         variant="outlined"
         @keydown="findNext($event, 'lastItem')"
