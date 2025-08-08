@@ -1,14 +1,10 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const dateInput = ref()
 const lastItem = ref()
 const firstItem = ref()
 const streetType = ref()
-
-watch(dateInput, (newVal, oldVal) => {
-  console.log('PARENT dateInput changed from', oldVal, 'to', newVal)
-})
 
 function findNext(e, source) {
   if (e.shiftKey && source === 'firstItem') {

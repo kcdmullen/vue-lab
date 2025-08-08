@@ -16,7 +16,7 @@ const props = defineProps({
   modelValue: String,
 })
 
-const dateRule = ref(validationRules.dateule)
+const dateRule = ref(validationRules.dateRule)
 const dateInput = ref('')
 const localValue = ref(props.modelValue)
 const input = ref()
@@ -52,9 +52,7 @@ function onDateInput(event) {
     // Show partial input as-is, using original values (no padding)
     dateInput.value = [mm, dd, yyyy].filter(Boolean).join('-')
   }
-  setTimeout(() => {
-    emit('update:modelValue', `${dateInput.value}`)
-  }, 0);
+  emit('update:modelValue', `${dateInput.value}`)
 }
 
 const emit = defineEmits(['update:modelValue', 'hitEnter'])
@@ -84,6 +82,10 @@ function focus() {
   input.value.focus()
 }
 
+function onInput() {
+  emit('update:modelValue', localValue.value)
+}
+
 onMounted(() => {
   if (props.required) {
     dateRule.value = validationRules.requiredRule.concat(dateRule.value)
@@ -104,11 +106,13 @@ onMounted(() => {
       :error="props.error"
       :maxLength="10"
       density="compact"
-      @blur="onDateInput"
       v-model="localValue"
+      @input="onInput"
+      @blur="onDateInput"
       @keydown="preventSubmit"
       :tabindex="1"
       ref="input"
+      validateOn="blur"
     ></v-text-field>
   </div>
 </template>
